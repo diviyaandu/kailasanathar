@@ -1,0 +1,21 @@
+{
+  "model_file": "sculpture_classifier.tflite",
+  "input_shape": [
+    1,
+    224,
+    224,
+    3
+  ],
+  "input_dtype": "float32",
+  "input_range": "raw RGB 0..255, NO mean/std normalisation",
+  "resize": "direct resize of the whole frame to 224x224 (no crop, no padding)",
+  "output": "softmax probabilities, one per label (same order as labels)",
+  "labels": [
+    "dakshinamurthy",
+    "Dancing_Shiva",
+    "durga",
+    "nandi",
+    "Shiva_Parvati"
+  ],
+  "confidence_threshold": 0.8
+}

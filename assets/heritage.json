@@ -1,0 +1,32 @@
+{
+  "dakshinamurthy": {
+    "name": "Dakshinamurthy",
+    "description": "Shiva depicted as the supreme teacher, seated facing south, teaching sages in silence.",
+    "significance": "Represents the transmission of knowledge beyond words.",
+    "mythology": "Associated with Shiva imparting wisdom to rishis under a banyan tree."
+  },
+  "Dancing_Shiva": {
+    "name": "Nataraja (Dancing Shiva)",
+    "description": "Shiva performing the cosmic dance, often shown with multiple arms in dynamic motion.",
+    "significance": "Symbolizes the cycle of creation, preservation, and destruction.",
+    "mythology": "The Ananda Tandava dance, performed to destroy a demon and restore cosmic order."
+  },
+  "durga": {
+    "name": "Durga",
+    "description": "The warrior goddess, often depicted with multiple arms holding weapons.",
+    "significance": "Represents the triumph of good over evil and divine feminine power.",
+    "mythology": "Known for slaying the buffalo demon Mahishasura."
+  },
+  "nandi": {
+    "name": "Nandi",
+    "description": "The bull, Shiva's mount and gatekeeper, usually seated facing the sanctum.",
+    "significance": "Symbolizes strength, loyalty, and dharma.",
+    "mythology": "Nandi guards the entrance to Shiva's abode and is worshipped as his devoted attendant."
+  },
+  "Shiva_Parvati": {
+    "name": "Shiva-Parvati",
+    "description": "Shiva and Parvati depicted together, often in an intimate or domestic pose.",
+    "significance": "Represents the union of masculine and feminine cosmic principles.",
+    "mythology": "Parvati is Shiva's consort, and their union represents wholeness in Hindu cosmology."
+  }
+}
