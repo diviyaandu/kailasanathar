@@ -40,23 +40,29 @@ images from other temples are used, even of the same deity.
   robustness to camera conditions.
 - **Known weak spots:** Dancing Shiva and Shiva–Parvati are the least
   reliable classes; Nandi is the most reliable.
+- **Export:** float16-quantized TFLite (~6 MB), verified for exact
+  prediction parity (argmax agreement) with the source Keras model.
 
 ## Repository structure
 
 ```
-scripts/
-  01_audit_and_split.py   Dataset audit + leakage-safe train/val/test split
-  02_train.py              Train (cross-validation or final) the classifier
-  03_export_tflite.py      Export to TFLite, verify parity, calibrate threshold
 lib/
-  main.dart                App entry point
-  camera_screen.dart        Live camera UI + prediction smoothing + overlay card
-  sculpture_classifier.dart TFLite inference wrapper
+  main.dart                   App entry point
+  camera_screen.dart          Live camera UI + prediction smoothing + overlay card
+  sculpture_classifier.dart   TFLite inference wrapper
 assets/
-  sculpture_classifier.tflite  Exported model
-  model_info.json              Labels, input spec, confidence threshold
+  sculpture_classifier.tflite   Exported model
+  model_info.json               Labels, input spec, confidence threshold
   heritage.json                 Sculpture name/description/significance/mythology
+training/                       (training pipeline scripts; add if not yet present)
+  01_audit_and_split.py         Dataset audit + leakage-safe train/val/test split
+  02_train.py                   Train (cross-validation or final) the classifier
+  03_export_tflite.py           Export to TFLite, verify parity, calibrate threshold
+android/, ios/, ...              Flutter platform folders
 ```
+
+_The raw training dataset (hundreds of sculpture images) is not committed to
+this repo — only the exported model and scripts._
 
 ## Training pipeline (Python / Google Colab)
 
@@ -74,19 +80,35 @@ python 02_train.py --mode final --root dataset --splits splits.csv --outdir out_
 python 03_export_tflite.py --outdir out_e60 --root dataset --splits splits.csv --unknown_dir unknown
 ```
 
-## Flutter app
+## Running the Flutter app
 
-1. Copy `out_e60/sculpture_classifier.tflite` and `out_e60/model_info.json`
-   into `assets/`.
-2. Edit `assets/heritage.json` with the real sculpture information (keys
-   must match the labels in `model_info.json` exactly).
-3. `flutter pub get`
-4. `flutter run`
+```bash
+flutter pub get
+flutter run -d <device-id>
+```
+
+Requires a physical device with a camera (the `camera` plugin does not work
+in most emulators). Grant the camera permission prompt on first launch.
 
 The app runs a live camera preview, classifies a frame roughly every 700ms,
 and smooths predictions over a 5-frame majority vote before showing an
 overlay card. Predictions below the confidence threshold are treated as
 "not recognised."
+
+### Updating the model
+
+1. Copy `out_e60/sculpture_classifier.tflite` and `out_e60/model_info.json`
+   into `assets/`.
+2. Edit `assets/heritage.json` with sculpture information (keys must match
+   the labels in `model_info.json` exactly).
+3. `flutter pub get && flutter run`
+
+## Tech stack
+
+- **Model training:** TensorFlow/Keras, scikit-learn (grouped CV splitting,
+  logistic-regression baseline, metrics), MobileNetV3-Large (ImageNet
+  pretrained).
+- **App:** Flutter, `tflite_flutter`, `camera`.
 
 ## Known limitations
 
@@ -107,6 +129,7 @@ overlay card. Predictions below the confidence threshold are treated as
 - [x] Model training and cross-validation
 - [x] TFLite export and threshold calibration
 - [x] Flutter camera app with live inference and overlay
+- [x] GitHub repo set up
 - [ ] Fix live-camera misclassification bias
 - [ ] On-site phone photo validation at the temple
 - [ ] Final heritage content for all five sculptures
