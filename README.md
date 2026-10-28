@@ -43,6 +43,52 @@ images from other temples are used, even of the same deity.
 - **Export:** float16-quantized TFLite (~6 MB), verified for exact
   prediction parity (argmax agreement) with the source Keras model.
 
+## Experiment: hybrid cropping vs original images
+
+Controlled comparison: same 110 images, `splits.csv` (MD5 f82f3699…), folds,
+seeds (42 + fold), architecture and hyperparameters; only the images differ.
+Cropped images: `dataset_cropped_matched/` (79 cropped, 31 unchanged;
+`Kailasanathar_Temple_22.jpg` restored from the original because the crop step
+produced no file). 16 cropped images have a shorter side < 150 px.
+Outputs: `out_e60/` (baseline), `out_cropped_e60/` (cropped); `out_oof/` holds
+out-of-fold probabilities. Final cropped model: 35 epochs (median CV best epoch).
+
+| Metric               | Original      | Cropped       |
+| -------------------- | ------------- | ------------- |
+| CV accuracy          | 0.874 ± 0.071 | 0.925 ± 0.054 |
+| CV macro-F1          | 0.858 ± 0.078 | 0.923 ± 0.055 |
+| Test accuracy (n=16) | 0.875         | 0.875         |
+| Test macro-F1        | 0.869         | 0.871         |
+
+- CV: accuracy better in 3 folds, tied in 1, worse in 1. Per image: 9 fixed,
+  4 broken (exact McNemar p ≈ 0.27, not significant).
+- Test: both models make 2 errors on different images; no measurable difference.
+- Visual check of 4 broken images: 1 plausible detail loss (durga_023),
+  1 unchanged image (training variance), 2 likely noise.
+- Background-confusion reduction is a hypothesis, not demonstrated.
+
+### Unknown rejection (OOF, 94 known / 19 unknown × 5 fold models)
+
+| Thr | Known correct+accepted (orig / crop) | Unknown rejected (orig / crop) |
+| --- | ------------------------------------ | ------------------------------ |
+| 0.6 | 0.723 / 0.840                        | 0.705 / 0.695                  |
+| 0.7 | 0.628 / 0.755                        | 0.832 / 0.821                  |
+| 0.8 | 0.479 / 0.564                        | 0.968 / 0.937                  |
+
+Cropped model threshold: **0.7** (Youden J peak, chosen from OOF, not test).
+Unknown set also guided the choice, so rejection rates are optimistic.
+
+### TFLite (cropped)
+
+6.05 MB; Keras–TFLite max prob diff 0.0095, argmax agreement 1.000,
+TFLite test accuracy 0.875 (n=16). Not yet deployed to the app.
+
+### Limitations
+
+16 test images and 19 unknown images are too few for significance; the cropped
+model is preliminary. Training used CPU on Colab (TF 2.21.0 / Keras 3.13.2);
+baseline library versions are unknown.
+
 ## Repository structure
 
 ```
