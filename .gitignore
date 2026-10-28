@@ -12,6 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 prompt.txt
+commands.txt 
 
 # IntelliJ related
 *.iml

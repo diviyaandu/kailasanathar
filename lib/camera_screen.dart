@@ -7,9 +7,12 @@ import 'package:flutter/services.dart';
 import 'result_screen.dart';
 import 'sculpture_classifier.dart';
 import 'theme.dart';
+import 'info_overlay_card.dart';
+import 'sculpture_info.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
+
   @override
   State<CameraScreen> createState() => _CameraScreenState();
 }
@@ -21,6 +24,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Map<String, dynamic> _heritage = {};
   bool _busy = false;
   String? _error;
+  SculptureInfo? _shown;
 
   @override
   void initState() {
@@ -32,19 +36,24 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       await _classifier.load();
       _classifierLoaded = true;
+
       final s = await rootBundle.loadString('assets/heritage.json');
       _heritage = json.decode(s) as Map<String, dynamic>;
+
       final cameras = await availableCameras();
       final c = CameraController(
         cameras.first,
         ResolutionPreset.medium,
         enableAudio: false,
       );
+
       await c.initialize();
+
       if (!mounted) {
         c.dispose();
         return;
       }
+
       setState(() => _controller = c);
     } catch (e) {
       if (mounted) setState(() => _error = '$e');
@@ -54,25 +63,38 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> _capture() async {
     final c = _controller;
     if (_busy || c == null || !c.value.isInitialized) return;
-    setState(() => _busy = true);
+
+    setState(() {
+      _busy = true;
+      _shown = null;
+    });
+
     try {
       final file = await c.takePicture();
       final bytes = await file.readAsBytes();
       final (label, conf) = await _classifier.predict(bytes);
+
       if (!mounted) return;
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ResultScreen(
-            imageBytes: bytes,
-            label: label,
-            confidence: conf,
-            info: label == null
-                ? null
-                : _heritage[label] as Map<String, dynamic>?,
+
+      final raw = label == null ? null : _heritage[label];
+
+      if (label != null && raw is Map<String, dynamic>) {
+        setState(
+          () => _shown = SculptureInfo.fromJson(raw, fallbackName: label),
+        );
+      } else {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ResultScreen(
+              imageBytes: bytes,
+              label: label,
+              confidence: conf,
+              info: null,
+            ),
           ),
-        ),
-      );
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -106,7 +128,9 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
       );
     }
+
     final c = _controller;
+
     if (c == null || !c.value.isInitialized) {
       return const Scaffold(
         body: Center(
@@ -114,6 +138,7 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
       );
     }
+
     final ps = c.value.previewSize!;
     final size = MediaQuery.of(context).size;
     final frame = size.width * 0.78;
@@ -133,7 +158,9 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ),
           ),
+
           Container(color: Colors.black.withValues(alpha: 0.15)),
+
           Center(
             child: SizedBox(
               width: frame,
@@ -141,6 +168,7 @@ class _CameraScreenState extends State<CameraScreen> {
               child: CustomPaint(painter: _FramePainter()),
             ),
           ),
+
           SafeArea(
             child: Align(
               alignment: Alignment.topLeft,
@@ -154,6 +182,23 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ),
           ),
+
+          // Contextual sculpture information overlay
+          if (_shown != null)
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 56, 16, 0),
+                  child: InfoOverlayCard(
+                    key: ValueKey(_shown!.name),
+                    info: _shown!,
+                    onDismiss: () => setState(() => _shown = null),
+                  ),
+                ),
+              ),
+            ),
+
           Positioned(
             left: 0,
             right: 0,
@@ -164,6 +209,8 @@ class _CameraScreenState extends State<CameraScreen> {
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
+
+          // Existing camera capture button
           Positioned(
             left: 0,
             right: 0,
@@ -213,8 +260,10 @@ class _FramePainter extends CustomPainter {
       ..strokeWidth = 4
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
+
     const l = 36.0;
     final w = s.width, h = s.height;
+
     canvas.drawPath(
       Path()
         ..moveTo(0, l)

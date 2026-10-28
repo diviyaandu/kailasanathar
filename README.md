@@ -94,12 +94,16 @@ baseline library versions are unknown.
 ```
 lib/
   main.dart                   App entry point
-  camera_screen.dart          Live camera UI + prediction smoothing + overlay card
+  theme.dart                  Colours, typography, ThemeData
+  camera_screen.dart          Camera UI + capture/classify + overlay wiring
   sculpture_classifier.dart   TFLite inference wrapper
+  sculpture_info.dart         Null-safe model for a heritage.json entry
+  info_overlay_card.dart      Floating expandable info card
+  result_screen.dart          Shown only for unrecognised results
 assets/
   sculpture_classifier.tflite   Exported model
   model_info.json               Labels, input spec, confidence threshold
-  heritage.json                 Sculpture name/description/significance/mythology
+  heritage.json                 Sculpture name/period/description/significance/mythology
 training/                       (training pipeline scripts; add if not yet present)
   01_audit_and_split.py         Dataset audit + leakage-safe train/val/test split
   02_train.py                   Train (cross-validation or final) the classifier
@@ -141,12 +145,34 @@ and smooths predictions over a 5-frame majority vote before showing an
 overlay card. Predictions below the confidence threshold are treated as
 "not recognised."
 
+### AR-style info overlay
+
+After a successful recognition, a floating card appears over the camera
+preview. No AR tracking or extra dependencies are used.
+
+- **Collapsed:** name, period (if present), significance, info icon.
+- **Tap:** expands to full description, mythology, and any extra fields.
+- **▾ / ✕:** collapse / dismiss, then keep using the camera.
+- **Unrecognised / below threshold:** no card; `ResultScreen` opens with a tip.
+
+All content is read from `assets/heritage.json`; nothing is hardcoded in UI
+code. Missing fields are skipped.
+
+| Field                                      | Required | Behaviour                  |
+| ------------------------------------------ | -------- | -------------------------- |
+| `name`                                     | no       | Falls back to the label    |
+| `period`                                   | no       | Hidden if absent           |
+| `significance`, `description`, `mythology` | no       | Section hidden if absent   |
+| any other string field                     | no       | Shown in the expanded view |
+
+Model, confidence threshold, and capture-and-classify flow are unchanged.
+
 ### Updating the model
 
 1. Copy `out_e60/sculpture_classifier.tflite` and `out_e60/model_info.json`
    into `assets/`.
 2. Edit `assets/heritage.json` with sculpture information (keys must match
-   the labels in `model_info.json` exactly).
+   the labels in `model_info.json` exactly; optional `period` field supported).
 3. `flutter pub get && flutter run`
 
 ## Tech stack
@@ -175,7 +201,9 @@ overlay card. Predictions below the confidence threshold are treated as
 - [x] Model training and cross-validation
 - [x] TFLite export and threshold calibration
 - [x] Flutter camera app with live inference and overlay
+- [x] AR-style info overlay card (expand/collapse, JSON-driven)
 - [x] GitHub repo set up
 - [ ] Fix live-camera misclassification bias
 - [ ] On-site phone photo validation at the temple
+- [ ] Add `period` to `heritage.json`
 - [ ] Final heritage content for all five sculptures
