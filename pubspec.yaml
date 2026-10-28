@@ -64,6 +64,9 @@ flutter:
     - assets/sculpture_classifier.tflite
     - assets/model_info.json
     - assets/heritage.json
+    - assets/temples.json
+    - assets/maps/india.geojson
+    - assets/images/temples/
   #  - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

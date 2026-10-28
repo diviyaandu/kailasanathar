@@ -1,0 +1,74 @@
+[
+  {
+    "id": "kailasanathar",
+    "name": "Kailasanathar Temple",
+    "state": "Tamil Nadu",
+    "period": "c. 700–728 CE (Pallava)",
+    "description": "Pallava-era Shiva temple in Kanchipuram, known for its ring of small shrines and rich Shaiva sculpture.",
+    "image": "assets/images/temples/kailasanathar.jpg",
+    "lat": 12.83,
+    "lon": 79.7,
+    "history": "Built by the Pallava king Rajasimha (Narasimhavarman II) and completed by his son Mahendravarman III.",
+    "architecture": "Sandstone Dravidian temple with a ring of small shrines around the main sanctum."
+  },
+  {
+    "id": "brihadeeswarar",
+    "name": "Brihadeeswarar Temple",
+    "state": "Tamil Nadu",
+    "period": "c. 1010 CE (Chola)",
+    "description": "Grand Chola temple at Thanjavur dedicated to Shiva, part of the Great Living Chola Temples.",
+    "image": "assets/images/temples/brihadeeswarar.jpg",
+    "lat": 10.78,
+    "lon": 79.13,
+    "history": "Commissioned by Rajaraja I and consecrated around 1010 CE.",
+    "architecture": "Granite vimana about 66 m tall, with a large Nandi at the entrance. UNESCO World Heritage Site."
+  },
+  {
+    "id": "meenakshi",
+    "name": "Meenakshi Amman Temple",
+    "state": "Tamil Nadu",
+    "period": "16th–17th c. (Nayak)",
+    "description": "Temple complex in Madurai dedicated to Meenakshi and Sundareswarar, famed for its colourful gopurams.",
+    "image": "assets/images/temples/meenakshi.jpg",
+    "lat": 9.92,
+    "lon": 78.12,
+    "history": "An ancient shrine rebuilt and expanded under the Nayak rulers.",
+    "architecture": "Four towering gopurams with stucco figures, and the Thousand-Pillar Hall."
+  },
+  {
+    "id": "konark",
+    "name": "Konark Sun Temple",
+    "state": "Odisha",
+    "period": "13th c. (Eastern Ganga)",
+    "description": "Sun temple designed as a colossal stone chariot on the Odisha coast.",
+    "image": "assets/images/temples/konark.jpg",
+    "lat": 19.89,
+    "lon": 86.09,
+    "history": "Built by Narasimhadeva I of the Eastern Ganga dynasty.",
+    "architecture": "Chariot form with 24 carved stone wheels and seven horses. UNESCO World Heritage Site."
+  },
+  {
+    "id": "khajuraho",
+    "name": "Khajuraho Temples",
+    "state": "Madhya Pradesh",
+    "period": "c. 950–1050 CE (Chandela)",
+    "description": "Group of Hindu and Jain temples celebrated for finely carved sandstone sculpture.",
+    "image": "assets/images/temples/khajuraho.jpg",
+    "lat": 24.83,
+    "lon": 79.92,
+    "history": "Built by the Chandela dynasty over roughly a century.",
+    "architecture": "Nagara-style temples on high platforms. UNESCO World Heritage Site."
+  },
+  {
+    "id": "virupaksha",
+    "name": "Virupaksha Temple, Hampi",
+    "state": "Karnataka",
+    "period": "7th c. origins; Vijayanagara expansion",
+    "description": "Shiva temple on the Tungabhadra river, in continuous worship since early medieval times.",
+    "image": "assets/images/temples/virupaksha.jpg",
+    "lat": 15.34,
+    "lon": 76.46,
+    "history": "Worship here dates to about the 7th century; expanded under the Vijayanagara empire.",
+    "architecture": "Dravidian temple with a nine-tier gopuram. Part of the Hampi UNESCO World Heritage Site."
+  }
+]

@@ -207,3 +207,17 @@ Model, confidence threshold, and capture-and-classify flow are unchanged.
 - [ ] On-site phone photo validation at the temple
 - [ ] Add `period` to `heritage.json`
 - [ ] Final heritage content for all five sculptures
+
+### India Heritage Map (Explore)
+
+Offline map of India with tappable temple markers → bottom card → detail screen.
+No extra dependencies.
+
+- `assets/maps/india.geojson` — bundled outline (India official boundary)
+- `assets/temples.json` — id, name, state, period, description, image, lat, lon
+  (+ any extra string fields, shown on the detail screen)
+- `assets/images/temples/` — photos; a placeholder shows if a file is missing
+- `lib/india_map_screen.dart`, `india_outline.dart`, `temple.dart`,
+  `temple_card.dart`, `temple_detail_screen.dart`
+
+Add a temple: append an entry to `temples.json`, drop the image in `assets/images/temples/`.

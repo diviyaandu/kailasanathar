@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'camera_screen.dart';
 import 'theme.dart';
+import 'india_map_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -111,12 +112,13 @@ class HomeScreen extends StatelessWidget {
                       OutlinedButton.icon(
                         icon: const Icon(Icons.grid_view_rounded),
                         label: const Text('Explore'),
-                        onPressed: () => ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                              const SnackBar(
-                                content: Text('Explore: coming next'),
-                              ),
-                            ),
+                        // Explore button
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const IndiaMapScreen(),
+                          ),
+                        ),
                       ),
                     ],
                   ),
